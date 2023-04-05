@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "RSS aggregator",
   "main": "src/index.js",
-    "simple-git-hooks": {
+  "simple-git-hooks": {
     "pre-push": "make lint"
   },
   "engines": {
@@ -21,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/Bosqy/frontend-project-11/issues"
   },
-  "homepage": "https://github.com/Bosqy/frontend-project-11#readme"
+  "homepage": "https://github.com/Bosqy/frontend-project-11#readme",
+  "devDependencies": {
+    "eslint": "^8.37.0",
+    "eslint-config-airbnb-base": "^15.0.0"
+  }
 }
