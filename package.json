@@ -1,0 +1,25 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "RSS aggregator",
+  "main": "src/index.js",
+    "simple-git-hooks": {
+    "pre-push": "make lint"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bosqy/frontend-project-11.git"
+  },
+  "author": "Bosqy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bosqy/frontend-project-11/issues"
+  },
+  "homepage": "https://github.com/Bosqy/frontend-project-11#readme"
+}
