@@ -24,6 +24,8 @@
   "homepage": "https://github.com/Bosqy/frontend-project-11#readme",
   "devDependencies": {
     "eslint": "^8.37.0",
-    "eslint-config-airbnb-base": "^15.0.0"
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "simple-git-hooks": "^2.8.1"
   }
 }
