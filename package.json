@@ -49,7 +49,9 @@
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
+    "on-change": "^4.0.2",
     "sass": "^1.61.0",
-    "sass-loader": "^13.2.2"
+    "sass-loader": "^13.2.2",
+    "yup": "^1.0.2"
   }
 }
