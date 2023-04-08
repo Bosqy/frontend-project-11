@@ -21,8 +21,6 @@ export default () => {
     isValidUrl(state.newFeed).then((isUrl) => {
       const hasUrl = feeds.includes(state.newFeed);
 
-      console.log(`${isUrl}  ${hasUrl}`);
-
       const isValid = isUrl && !hasUrl;
       if (isValid) {
         feeds.push(state.newFeed);
