@@ -3,6 +3,8 @@
 import { object, string } from 'yup';
 import onChange from 'on-change';
 
+import { clearRssForm, setRssSuccessFeedback, setRssErrorFeedback } from './render.js';
+
 const isValidUrl = (feed) => {
   const schema = object({ feed: string().url() });
   return schema.isValid({ feed });
@@ -13,22 +15,17 @@ const state = {
   feeds: [],
 };
 
-const watchedState = onChange(state, () => {
-  const urlInput = document.getElementById('url-input');
-  urlInput.classList.remove('is-invalid');
+export default onChange(state, () => {
+  clearRssForm();
 
   isValidUrl(state.newFeed).then((isUrl) => {
     const hasUrl = state.feeds.includes(state.newFeed);
 
     const isValid = isUrl && !hasUrl;
     if (isValid) {
-      state.feeds.push(state.newFeed);
-      urlInput.value = '';
-      urlInput.focus();
+      setRssSuccessFeedback();
       return;
     }
-    urlInput.classList.add('is-invalid');
+    setRssErrorFeedback();
   });
 });
-
-export default watchedState;
