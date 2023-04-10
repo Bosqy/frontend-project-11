@@ -6,4 +6,7 @@ export const isValidUrl = (feed) => {
   return schema.isValid({ feed });
 };
 
-export const getRss = (url) => axios.get(url);
+export const getRss = (url) => {
+  const proxyUrl = `https://allorigins.hexlet.app/get?disableCache=true&url=${url}`;
+  return axios.get(proxyUrl);
+};
