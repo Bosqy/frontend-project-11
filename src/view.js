@@ -2,8 +2,10 @@
 
 import onChange from 'on-change';
 
-import { setRssFeedback } from './render.js';
-import { isValidUrl, getRss } from './utils.js';
+import { setRssFeedback, renderFeed } from './render.js';
+import {
+  isValidUrl, getRss, parseFeed, hasFeed,
+} from './utils.js';
 
 const state = {
   newFeed: null,
@@ -13,20 +15,18 @@ const state = {
 export default onChange(state, (path, value) => {
   switch (path) {
     case 'newFeed':
-      if (state.feeds.includes(value)) {
+      if (hasFeed(state, value)) {
         setRssFeedback('rssExists');
         return;
       }
       isValidUrl(value).then((isUrl) => {
         if (isUrl) {
           getRss(value).then((response) => {
-            console.log(response.data);
-            console.log(response.status);
-            console.log(response.headers);
-            state.feeds.push(value);
+            const parsedFeed = parseFeed(response.data.contents, value);
+            state.feeds.push(parsedFeed);
             state.newFeed = null;
+            renderFeed(parsedFeed, state.feeds.length);
             setRssFeedback('rssSuccess');
-            console.log(state.feeds);
           });
 
           return;

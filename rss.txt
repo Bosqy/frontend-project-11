@@ -1,1 +1,0 @@
-https://allorigins.hexlet.app/get?disableCache=true&url=https://lorem-rss.hexlet.app/feed

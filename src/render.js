@@ -29,3 +29,7 @@ export const setRssFeedback = (content) => {
   }
   rssFormContainer.append(rssFormFeedback);
 };
+
+export const renderFeed = (feed, feedsLength) => {
+  console.log(`${feedsLength}\n${JSON.stringify(feed)}`);
+};
