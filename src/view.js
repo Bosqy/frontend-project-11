@@ -1,31 +1,40 @@
 // @ts-check
 
-import { object, string } from 'yup';
 import onChange from 'on-change';
 
-import { clearRssForm, setRssSuccessFeedback, setRssErrorFeedback } from './render.js';
-
-const isValidUrl = (feed) => {
-  const schema = object({ feed: string().url() });
-  return schema.isValid({ feed });
-};
+import { setRssFeedback } from './render.js';
+import { isValidUrl, getRss } from './utils.js';
 
 const state = {
   newFeed: null,
   feeds: [],
 };
 
-export default onChange(state, () => {
-  clearRssForm();
+export default onChange(state, (path, value) => {
+  switch (path) {
+    case 'newFeed':
+      if (state.feeds.includes(value)) {
+        setRssFeedback('rssExists');
+        return;
+      }
+      isValidUrl(value).then((isUrl) => {
+        if (isUrl) {
+          getRss(value).then((response) => {
+            console.log(response.data);
+            console.log(response.status);
+            console.log(response.headers);
+            state.feeds.push(value);
+            state.newFeed = null;
+            setRssFeedback('rssSuccess');
+            console.log(state.feeds);
+          });
 
-  isValidUrl(state.newFeed).then((isUrl) => {
-    const hasUrl = state.feeds.includes(state.newFeed);
-
-    const isValid = isUrl && !hasUrl;
-    if (isValid) {
-      setRssSuccessFeedback();
-      return;
-    }
-    setRssErrorFeedback();
-  });
+          return;
+        }
+        setRssFeedback('rssInvalidFormat');
+      });
+      break;
+    default:
+      break;
+  }
 });

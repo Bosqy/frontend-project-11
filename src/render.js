@@ -2,28 +2,30 @@ import i18nInstance from './i18n.js';
 
 export const rssForm = document.querySelector('.rss-form');
 
-const urlInput = document.getElementById('url-input');
+export const setRssFeedback = (content) => {
+  const rssFormContainer = rssForm.parentElement;
+  const rssFormFeedback = document.createElement('p');
 
-export const clearRssForm = () => {
+  rssFormFeedback.classList.add('feedback', 'm-0', 'position-absolute', 'small');
+  rssFormFeedback.innerText = i18nInstance.t(content);
+
+  const urlInput = document.getElementById('url-input');
   urlInput.classList.remove('is-invalid');
   urlInput.focus();
   document.querySelectorAll('.rss-form ~ .feedback').forEach((el) => el.remove());
-};
 
-const rssFormContainer = rssForm.parentElement;
-
-const rssFormFeedback = document.createElement('p');
-rssFormFeedback.classList.add('feedback', 'm-0', 'position-absolute', 'small', 'text-success');
-
-export const setRssErrorFeedback = () => {
-  rssFormFeedback.classList.add('text-danger');
-  rssFormFeedback.innerText = i18nInstance.t('errorRss');
-  urlInput.classList.add('is-invalid');
-  rssFormContainer.append(rssFormFeedback);
-};
-
-export const setRssSuccessFeedback = () => {
-  urlInput.value = '';
-  rssFormFeedback.innerText = i18nInstance.t('successRss');
+  switch (content) {
+    case 'rssExists':
+    case 'rssInvalidFormat':
+      rssFormFeedback.classList.add('text-danger');
+      urlInput.classList.add('is-invalid');
+      break;
+    case 'rssSuccess':
+      urlInput.value = '';
+      rssFormFeedback.classList.add('text-success');
+      break;
+    default:
+      break;
+  }
   rssFormContainer.append(rssFormFeedback);
 };

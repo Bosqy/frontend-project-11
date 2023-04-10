@@ -1,7 +1,8 @@
 export default {
   translation: {
     language: 'Русский',
-    errorRss: 'Ссылка дожна быть валидным URL',
-    successRss: 'RSS успешно загружен',
+    rssInvalidFormat: 'Ссылка дожна быть валидным URL',
+    rssExists: 'RSS уже существует',
+    rssSuccess: 'RSS успешно загружен',
   },
 };
