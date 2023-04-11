@@ -17,6 +17,8 @@ export const setRssFeedback = (content) => {
   switch (content) {
     case 'rssExists':
     case 'rssInvalidFormat':
+    case 'rssInvalidContent':
+    case 'rssNetworkError':
       rssFormFeedback.classList.add('text-danger');
       urlInput.classList.add('is-invalid');
       break;
@@ -30,6 +32,52 @@ export const setRssFeedback = (content) => {
   rssFormContainer.append(rssFormFeedback);
 };
 
-export const renderFeed = (feed, feedsLength) => {
-  console.log(`${feedsLength}\n${JSON.stringify(feed)}`);
+const renderContainer = (selector, title) => {
+  const container = document.querySelector(selector);
+  const card = document.createElement('div');
+  card.classList.add('card', 'border-0');
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+  const cardBodyTitle = document.createElement('h2');
+  cardBodyTitle.classList.add('card-title', 'h4');
+  cardBodyTitle.innerText = i18nInstance.t(title);
+  cardBody.append(cardBodyTitle);
+  const ul = document.createElement('ul');
+  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  card.append(cardBody, ul);
+  container.append(card);
+};
+
+export const renderFeedsMarkup = () => {
+  renderContainer('.feeds', i18nInstance.t('feedsHeader'));
+  renderContainer('.posts', i18nInstance.t('postsHeader'));
+};
+
+export const renderFeed = (feed) => {
+  const feedsUl = document.querySelector('.feeds ul');
+  const feedHeader = document.createElement('h3');
+  feedHeader.classList.add('h6', 'm-0');
+  feedHeader.innerText = feed.title;
+  const feedDescription = document.createElement('p');
+  feedDescription.classList.add('m-0', 'small', 'text-black-50');
+  feedDescription.innerText = feed.description;
+  feedsUl.append(feedHeader, feedDescription);
+
+  const postsUl = document.querySelector('.posts ul');
+
+  feed.items.forEach((item) => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'd-flex', 'jusitfy-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    const href = document.createElement('a');
+    href.classList.add('fw-bold');
+    href.setAttribute('href', item.link);
+    href.setAttribute('target', '_blank');
+    href.setAttribute('rel', 'noopener noreferrer');
+    href.innerText = item.title;
+    li.append(href);
+    postsUl.prepend(li);
+  });
+
+  console.log(feedsUl);
+  console.log(feed);
 };
