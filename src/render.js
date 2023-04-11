@@ -62,10 +62,12 @@ export const renderFeed = (feed) => {
   feedDescription.classList.add('m-0', 'small', 'text-black-50');
   feedDescription.innerText = feed.description;
   feedsUl.append(feedHeader, feedDescription);
+};
 
+export const renderPosts = (posts) => {
   const postsUl = document.querySelector('.posts ul');
 
-  feed.items.forEach((item) => {
+  posts.forEach((item) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'jusitfy-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const href = document.createElement('a');
@@ -73,11 +75,10 @@ export const renderFeed = (feed) => {
     href.setAttribute('href', item.link);
     href.setAttribute('target', '_blank');
     href.setAttribute('rel', 'noopener noreferrer');
+    href.setAttribute('data-id', item.id);
     href.innerText = item.title;
     li.append(href);
     postsUl.prepend(li);
   });
 
-  console.log(feedsUl);
-  console.log(feed);
 };
