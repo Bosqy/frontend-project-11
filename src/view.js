@@ -2,7 +2,9 @@
 
 import onChange from 'on-change';
 
-import { setRssFeedback, renderFeedsMarkup, renderFeed, renderPosts } from './render.js';
+import {
+  setRssFeedback, renderFeedsMarkup, renderFeed, renderPosts,
+} from './render.js';
 import {
   isValidUrl, getRss, parseFeed, hasFeed,
 } from './utils.js';
@@ -29,7 +31,7 @@ export default onChange(state, (path, value) => {
                 return;
               }
               const parsedFeed = parseFeed(response.data.contents, value);
-              const feedData = { 
+              const feedData = {
                 url: parsedFeed.url,
                 title: parsedFeed.title,
                 description: parsedFeed.description,
@@ -39,7 +41,7 @@ export default onChange(state, (path, value) => {
               const postsData = parsedFeed.items
                 .map((item, i) => ({ ...item, id: currentPostIndex + i }));
               state.feeds.push(feedData);
-              state.posts = [ ...state.posts, ...postsData ];
+              state.posts = [...state.posts, ...postsData];
               console.log(state.posts);
               state.newFeed = null;
               if (state.feeds.length === 1) {

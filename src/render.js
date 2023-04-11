@@ -80,5 +80,4 @@ export const renderPosts = (posts) => {
     li.append(href);
     postsUl.prepend(li);
   });
-
 };
