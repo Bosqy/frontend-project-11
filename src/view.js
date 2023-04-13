@@ -67,7 +67,6 @@ const watchedState = onChange(state, (path, value) => {
       break;
     default:
       throw new Error('Unknown state!');
-      break;
   }
 });
 
