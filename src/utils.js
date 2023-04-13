@@ -22,7 +22,9 @@ export const parseFeed = (contents, url) => {
       const itemTitle = item.querySelector('title').textContent;
       const itemDescription = item.querySelector('description').textContent;
       const itemLink = item.querySelector('link').textContent;
-      return { title: itemTitle, description: itemDescription, link: itemLink };
+      return {
+        title: itemTitle, description: itemDescription, link: itemLink, url,
+      };
     });
 
   return {

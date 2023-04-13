@@ -11,11 +11,19 @@ import {
 
 const state = {
   newFeed: null,
+  newPosts: [],
   feeds: [],
   posts: [],
 };
 
-export default onChange(state, (path, value) => {
+const addPosts = () => {
+  const currentPostIndex = state.posts.length + 1;
+  const postsData = state.newPosts
+    .map((item, i) => ({ ...item, id: currentPostIndex + i }));
+  state.posts = [...state.posts, ...postsData];
+};
+
+const watchedState = onChange(state, (path, value) => {
   switch (path) {
     case 'newFeed':
       if (hasFeed(state, value)) {
@@ -37,19 +45,14 @@ export default onChange(state, (path, value) => {
                 description: parsedFeed.description,
                 id: state.feeds.length + 1,
               };
-              const currentPostIndex = state.posts.length + 1;
-              const postsData = parsedFeed.items
-                .map((item, i) => ({ ...item, id: currentPostIndex + i }));
               state.feeds.push(feedData);
-              state.posts = [...state.posts, ...postsData];
-              console.log(state.posts);
               state.newFeed = null;
               if (state.feeds.length === 1) {
                 renderFeedsMarkup();
               }
               renderFeed(feedData);
-              renderPosts(state.posts);
               setRssFeedback('rssSuccess');
+              watchedState.newPosts = parsedFeed.items;
             })
             .catch(() => setRssFeedback('rssNetworkError'));
 
@@ -58,7 +61,13 @@ export default onChange(state, (path, value) => {
         setRssFeedback('rssInvalidFormat');
       });
       break;
+    case 'newPosts':
+      addPosts();
+      renderPosts(state.posts);
+      break;
     default:
       break;
   }
 });
+
+export default watchedState;

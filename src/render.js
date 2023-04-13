@@ -66,6 +66,7 @@ export const renderFeed = (feed) => {
 
 export const renderPosts = (posts) => {
   const postsUl = document.querySelector('.posts ul');
+  postsUl.innerHtml = '';
 
   posts.forEach((item) => {
     const li = document.createElement('li');
