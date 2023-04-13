@@ -3,7 +3,7 @@ export default {
     language: 'Русский',
     rssInvalidContent: 'Ресурс не содержит валидный RSS',
     rssInvalidFormat: 'Ссылка должна быть валидным URL',
-    rssNetworkError: 'RSS недоступен',
+    rssNetworkError: 'Ошибка сети',
     rssExists: 'RSS уже существует',
     rssSuccess: 'RSS успешно загружен',
     feedsHeader: 'Фиды',
