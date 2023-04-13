@@ -70,7 +70,7 @@ export const renderPosts = (posts) => {
 
   posts.forEach((item) => {
     const li = document.createElement('li');
-    li.classList.add('list-group-item', 'd-flex', 'jusitfy-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const href = document.createElement('a');
     href.classList.add('fw-bold');
     href.setAttribute('href', item.link);
@@ -78,7 +78,28 @@ export const renderPosts = (posts) => {
     href.setAttribute('rel', 'noopener noreferrer');
     href.setAttribute('data-id', item.id);
     href.innerText = item.title;
+    const btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    btn.setAttribute('data-id', item.id);
+    btn.setAttribute('data-bs-toggle', 'modal');
+    btn.setAttribute('data-bs-target', '#modal');
+    btn.innerText = i18nInstance.t('readMore');
+    btn.addEventListener('click', () => {
+      href.classList.remove('fw-bold');
+      href.classList.add('fw-normal', 'link-secondary');
+      const modalHeader = document.querySelector('.modal-header');
+      const modalTitle = document.createElement('h5');
+      modalTitle.classList.add('modal-title');
+      modalTitle.innerText = item.title;
+      modalHeader.prepend(modalTitle);
+      const modalBody = document.querySelector('.modal-body');
+      modalBody.innerText = item.description;
+      const hrefArticle = document.querySelector('.full-article');
+      hrefArticle.setAttribute('href', item.link);
+    });
     li.append(href);
-    postsUl.prepend(li);
+    li.append(btn);
+    postsUl.append(li);
   });
 };

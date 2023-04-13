@@ -8,5 +8,6 @@ export default {
     rssSuccess: 'RSS успешно загружен',
     feedsHeader: 'Фиды',
     postsHeader: 'Посты',
+    readMore: 'Просмотр',
   },
 };
