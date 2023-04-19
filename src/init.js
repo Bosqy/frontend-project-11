@@ -37,8 +37,6 @@ const domElements = {
 const refresh = (watchedState) => {
   const refreshInterval = 5000;
   setTimeout(() => {
-    //    const oldPosts = watchedState.posts
-    //      .map((post) => post.title);
     const getAllRss = watchedState.feeds
       .map((feed) => feed.url)
       .map((feed) => getRss(feed));
@@ -48,10 +46,6 @@ const refresh = (watchedState) => {
           .flatMap((response) => parseFeed(response.data.contents, response.data.status.url).items);
         const newPosts = addPosts(watchedState.posts, posts);
         watchedState.posts.push(...newPosts);
-        //          .filter((item) => !oldPosts.includes(item.title));
-        //        if (newPosts.length > 0) {
-        //          watchedState.newPosts = newPosts;
-        //        }
         refresh(watchedState);
       });
   }, refreshInterval);
@@ -69,12 +63,14 @@ export default () => {
     );
     domElements.form.addEventListener('submit', (e) => {
       e.preventDefault();
+      watchedState.form = 'rssLoading';
       const formData = new FormData(e.target);
       const url = formData.get('url').trim();
       validateUrl(url, watchedState)
         .then((validated) => getRss(validated.feed))
         .then((response) => {
           if (isValidContent(response)) {
+            watchedState.form = 'rssSuccess';
             const parsedFeed = parseFeed(response.data.contents, response.data.status.url);
             const feedData = {
               url: parsedFeed.url,
@@ -84,7 +80,6 @@ export default () => {
             const newPosts = addPosts(watchedState.posts, parsedFeed.items);
             watchedState.posts.push(...newPosts);
             watchedState.feeds.push(feedData);
-            watchedState.form = 'rssSuccess';
             return;
           }
           watchedState.form = 'rssInvalidContent';

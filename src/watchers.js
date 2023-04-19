@@ -11,10 +11,18 @@ const renderForm = (state, form, i18nInstance) => {
 
   const urlInput = document.getElementById('url-input');
   urlInput.classList.remove('is-invalid');
+  urlInput.removeAttribute('readonly');
   urlInput.focus();
   document.querySelectorAll('.rss-form ~ .feedback').forEach((el) => el.remove());
 
+  const submit = document.querySelector('[type="submit"]');
+  submit.removeAttribute('disabled');
+
   switch (state.form) {
+    case 'rssLoading':
+      urlInput.setAttribute('readonly', 'true');
+      submit.setAttribute('disabled', 'disabled');
+      break;
     case 'rssExists':
     case 'rssInvalidFormat':
     case 'rssInvalidContent':
