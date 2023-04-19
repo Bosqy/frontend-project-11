@@ -17,7 +17,7 @@ const validateUrl = (feed, state) => {
 const i18nInstance = i18n.createInstance();
 
 const initialState = {
-  form: null,
+  form: 'ready',
   feeds: [],
   posts: [],
   modal: {},

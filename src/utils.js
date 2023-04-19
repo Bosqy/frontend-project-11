@@ -8,9 +8,6 @@ export const addPosts = (currentPosts, newPosts) => {
     .map((post, i) => ({ ...post, id: currentIndex + i, visited: false }));
 };
 
-export const markVisited = (datasetId, posts) => posts
-  .map((post) => ((Number(datasetId) === post.id) ? { ...post, visited: true } : post));
-
 export const getModalData = (datasetId, posts) => posts
   .reduce((acc, post) => ((Number(datasetId) === post.id) ? { ...acc, ...post } : acc), {});
 
@@ -33,10 +30,8 @@ export const isValidContent = (response) => {
   return true;
 };
 
-export const hasFeed = (state, feed) => {
-  const feeds = state.feeds.map((el) => el.url);
-  return feeds.includes(feed);
-};
+export const markVisited = (datasetId, posts) => posts
+  .map((post) => ((Number(datasetId) === post.id) ? { ...post, visited: true } : post));
 
 export const parseFeed = (contents, url) => {
   const feed = new DOMParser();
