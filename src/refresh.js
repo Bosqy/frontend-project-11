@@ -1,5 +1,5 @@
 import { getRss, parseFeed } from './utils.js';
-import watchedState from './view.js';
+import watchedState from './watchers.js';
 
 const refresh = () => {
   const refreshInterval = 5000;

@@ -1,14 +1,41 @@
 import axios from 'axios';
-import { object, string } from 'yup';
 
-export const isValidUrl = (feed) => {
-  const schema = object({ feed: string().url() });
-  return schema.isValid({ feed });
+export const addPosts = (currentPosts, newPosts) => {
+  const currentLinks = currentPosts.map(({ link }) => link);
+  const currentIndex = currentLinks.length + 1;
+  return newPosts
+    .filter(({ link }) => !currentLinks.includes(link))
+    .map((post, i) => ({ ...post, id: currentIndex + i, visited: false }));
 };
 
+export const markVisited = (datasetId, posts) => posts
+  .map((post) => ((Number(datasetId) === post.id) ? { ...post, visited: true } : post));
+
+export const getModalData = (datasetId, posts) => posts
+  .reduce((acc, post) => ((Number(datasetId) === post.id) ? { ...acc, ...post } : acc), {});
+
 export const getRss = (url) => {
-  const proxyUrl = `https://allorigins.hexlet.app/get?disableCache=true&url=${url}`;
-  return axios.get(proxyUrl);
+  const proxyServer = 'https://allorigins.hexlet.app';
+  const pathname = 'get';
+  const cacheParam = '?disableCache=true';
+  const urlParam = `url=${url}`;
+  const proxyUrl = new URL(`${proxyServer}/${pathname}${cacheParam}&${urlParam}`);
+  return axios.get(proxyUrl.href);
+};
+
+export const isValidContent = (response) => {
+  if (response.data.contents === null) {
+    return false;
+  }
+  if (!response.data.contents.includes('<rss')) {
+    return false;
+  }
+  return true;
+};
+
+export const hasFeed = (state, feed) => {
+  const feeds = state.feeds.map((el) => el.url);
+  return feeds.includes(feed);
 };
 
 export const parseFeed = (contents, url) => {
@@ -30,9 +57,4 @@ export const parseFeed = (contents, url) => {
   return {
     url, title, description, items,
   };
-};
-
-export const hasFeed = (state, feed) => {
-  const feeds = state.feeds.map((el) => el.url);
-  return feeds.includes(feed);
 };
