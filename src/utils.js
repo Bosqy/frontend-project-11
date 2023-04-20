@@ -12,12 +12,16 @@ export const getModalData = (datasetId, posts) => posts
   .reduce((acc, post) => ((Number(datasetId) === post.id) ? { ...acc, ...post } : acc), {});
 
 export const getRss = (url) => {
+/*
   const proxyServer = 'https://allorigins.hexlet.app';
   const pathname = 'get';
   const cacheParam = '?disableCache=true';
   const urlParam = `url=${url}`;
   const proxyUrl = new URL(`${proxyServer}/${pathname}${cacheParam}&${urlParam}`);
   return axios.get(proxyUrl.href);
+*/
+  const proxyUrl = `https://allorigins.hexlet.app/get?disableCache=true&url=${url}`;
+  return axios.get(proxyUrl);
 };
 
 export const isValidContent = (response) => {
