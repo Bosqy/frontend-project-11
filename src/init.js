@@ -14,8 +14,7 @@ const validateUrl = (feed, state) => {
   return schema.validate({ feed });
 };
 
-const refresh = (watchedState) => {
-  const refreshInterval = 5000;
+const refresh = (watchedState, refreshInterval) => {
   setTimeout(() => {
     const getAllRss = watchedState.feeds
       .map((feed) => feed.url)
@@ -26,7 +25,10 @@ const refresh = (watchedState) => {
           .flatMap((response) => parseFeed(response.data.contents, response.data.status.url).items);
         const newPosts = addPosts(watchedState.posts, posts);
         watchedState.posts.push(...newPosts);
-        refresh(watchedState);
+        refresh(watchedState, refreshInterval);
+      })
+      .catch(() => {
+        refresh(watchedState, refreshInterval);
       });
   }, refreshInterval);
 };
@@ -100,6 +102,7 @@ export default () => {
         watchedState.modal = getModalData(e.target.dataset.id, watchedState.posts);
       }
     });
-    refresh(watchedState);
+    const refreshInterval = 5000;
+    refresh(watchedState, refreshInterval);
   });
 };
