@@ -14,26 +14,6 @@ const validateUrl = (feed, state) => {
   return schema.validate({ feed });
 };
 
-const i18nInstance = i18n.createInstance();
-
-const initialState = {
-  form: 'ready',
-  feeds: [],
-  posts: [],
-  modal: {},
-};
-
-const domElements = {
-  form: document.querySelector('.rss-form'),
-  feedsContainer: document.querySelector('.feeds'),
-  postsContainer: document.querySelector('.posts'),
-  modal: {
-    title: document.querySelector('.modal-title'),
-    body: document.querySelector('.modal-body'),
-    href: document.querySelector('.modal-footer a'),
-  },
-};
-
 const refresh = (watchedState) => {
   const refreshInterval = 5000;
   setTimeout(() => {
@@ -52,6 +32,26 @@ const refresh = (watchedState) => {
 };
 
 export default () => {
+  const initialState = {
+    form: 'ready',
+    feeds: [],
+    posts: [],
+    modal: {},
+  };
+
+  const domElements = {
+    form: document.querySelector('.rss-form'),
+    feedsContainer: document.querySelector('.feeds'),
+    postsContainer: document.querySelector('.posts'),
+    modal: {
+      title: document.querySelector('.modal-title'),
+      body: document.querySelector('.modal-body'),
+      href: document.querySelector('.modal-footer a'),
+    },
+  };
+
+  const i18nInstance = i18n.createInstance();
+
   i18nInstance.init({
     lng: 'ru',
     resources,
