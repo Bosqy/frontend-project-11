@@ -63,7 +63,7 @@ export default () => {
     );
     domElements.form.addEventListener('submit', (e) => {
       e.preventDefault();
-      //      watchedState.form = 'rssLoading';
+      watchedState.form = 'rssLoading';
       const formData = new FormData(e.target);
       const url = formData.get('url').trim();
       validateUrl(url, watchedState)
@@ -71,9 +71,9 @@ export default () => {
         .then((response) => {
           if (isValidContent(response)) {
             watchedState.form = 'rssSuccess';
-            const parsedFeed = parseFeed(response.data.contents, response.data.status.url);
+            const parsedFeed = parseFeed(response.data.contents, url);
             const feedData = {
-              url: parsedFeed.url,
+              url,
               title: parsedFeed.title,
               description: parsedFeed.description,
             };
