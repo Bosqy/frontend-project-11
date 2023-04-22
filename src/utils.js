@@ -20,11 +20,12 @@ export const getRss = (url) => {
   return axios.get(proxyUrl.toString());
 };
 
+
 export const isValidContent = (response) => {
   if (response.data.contents === null) {
     return false;
   }
-  if (!response.data.contents.includes('<rss')) {
+  if (!response.data.contents.match(/<rss/i)) {
     return false;
   }
   return true;
