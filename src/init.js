@@ -42,7 +42,13 @@ export default () => {
   };
 
   const domElements = {
-    form: document.querySelector('.rss-form'),
+    form: {
+      container: document.querySelector('.rss-form').parentElement,
+      feedback: document.querySelector('.feedback'),
+      input: document.querySelector('#url-input'),
+      self: document.querySelector('.rss-form'),
+      submit: document.querySelector('[type="submit"]'),
+    },
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
     modal: {
@@ -63,7 +69,7 @@ export default () => {
       initialState,
       domElements,
     );
-    domElements.form.addEventListener('submit', (e) => {
+    domElements.form.self.addEventListener('submit', (e) => {
       e.preventDefault();
       watchedState.form = 'rssLoading';
       const formData = new FormData(e.target);
