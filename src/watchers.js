@@ -3,31 +3,29 @@
 import onChange from 'on-change';
 
 const renderForm = (state, form, i18nInstance) => {
-  const formFeedbackText = document.createTextNode(i18nInstance.t(state.form));
+  const formFeedbackText = document.createTextNode(i18nInstance.t(state.formStatus.message));
   form.feedback.replaceChildren(formFeedbackText);
 
   form.input.classList.remove('is-invalid');
   form.input.removeAttribute('readonly');
   form.input.focus();
   form.submit.removeAttribute('disabled');
+  form.feedback.classList.replace('text-success', 'text-danger');
 
-  switch (state.form) {
-    case 'rssLoading':
+  switch (state.formStatus.status) {
+    case 'loading':
       form.input.setAttribute('readonly', 'true');
       form.submit.setAttribute('disabled', '');
       break;
-    case 'rssExists':
-    case 'rssInvalidFormat':
-    case 'rssInvalidContent':
-    case 'rssNetworkError':
+    case 'error':
       form.input.classList.add('is-invalid');
       break;
-    case 'rssSuccess':
+    case 'success':
       form.self.reset();
       form.feedback.classList.replace('text-danger', 'text-success');
       break;
     default:
-      throw new Error(`Unknown form state ${state.form}`);
+      throw new Error(`Unknown form state ${state.formStatus}`);
   }
 };
 
@@ -110,7 +108,7 @@ const renderModal = (state, modal) => {
 export default (i18nInstance, state, domElements) => {
   const watchedState = onChange(state, (path) => {
     switch (path) {
-      case 'form':
+      case 'formStatus':
         renderForm(state, domElements.form, i18nInstance);
         break;
       case 'feeds':

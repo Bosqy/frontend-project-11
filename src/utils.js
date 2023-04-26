@@ -11,31 +11,33 @@ export const addPosts = (currentPosts, newPosts) => {
 export const getModalData = (datasetId, posts) => posts
   .reduce((acc, post) => ((Number(datasetId) === post.id) ? { ...acc, ...post } : acc), {});
 
-export const getRss = (url) => {
-  const proxyServer = 'https://allorigins.hexlet.app';
-  const pathname = 'get';
-  const cacheParam = '?disableCache=true';
-  const urlParam = `url=${url}`;
-  const proxyUrl = new URL(`${proxyServer}/${pathname}${cacheParam}&${urlParam}`);
-  return axios.get(proxyUrl.toString());
+const addProxy = (url) => {
+  const proxy = {
+    server: 'https://allorigins.hexlet.app',
+    pathname: '/get',
+    disableCache: true,
+    url,
+  };
+  const proxyUrl = new URL(proxy.pathname, proxy.server);
+  proxyUrl.searchParams.set('disableCache', proxy.disableCache);
+  proxyUrl.searchParams.set('url', proxy.url);
+  return proxyUrl;
 };
 
-export const isValidContent = (response) => {
-  if (response.data.contents === null) {
-    return false;
-  }
-  if (!response.data.contents.match(/<rss/i)) {
-    return false;
-  }
-  return true;
+export const getRss = (url) => {
+  const proxyUrl = addProxy(url);
+  return axios.get(proxyUrl.toString());
 };
 
 export const markVisited = (datasetId, posts) => posts
   .map((post) => ((Number(datasetId) === post.id) ? { ...post, visited: true } : post));
 
-export const parseFeed = (contents, url) => {
+export const parse = (rssString) => {
   const feed = new DOMParser();
-  const parsedFeed = feed.parseFromString(contents, 'text/xml');
+  const parsedFeed = feed.parseFromString(rssString, 'text/xml');
+  if (parsedFeed.querySelector('parsererror')) {
+    throw new Error('rssInvalidContent');
+  }
   const title = parsedFeed.querySelector('rss channel title').textContent;
   const description = parsedFeed.querySelector('rss channel description').textContent;
 
@@ -49,7 +51,5 @@ export const parseFeed = (contents, url) => {
       };
     });
 
-  return {
-    url, title, description, items,
-  };
+  return { title, description, items };
 };

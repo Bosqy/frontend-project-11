@@ -5,7 +5,7 @@ import { object, string } from 'yup';
 import watchState from './watchers.js';
 import resources from './locales/index.js';
 import {
-  getRss, getModalData, parseFeed, isValidContent, addPosts, markVisited,
+  getRss, getModalData, parse, addPosts, markVisited,
 } from './utils.js';
 
 const validateUrl = (feed, state) => {
@@ -17,12 +17,11 @@ const validateUrl = (feed, state) => {
 const refresh = (watchedState, refreshInterval) => {
   setTimeout(() => {
     const getAllRss = watchedState.feeds
-      .map((feed) => feed.url)
-      .map((feed) => getRss(feed));
+      .map((feed) => getRss(feed.url));
     Promise.all(getAllRss)
       .then((responses) => {
         const posts = responses
-          .flatMap((response) => parseFeed(response.data.contents, response.data.status.url).items);
+          .flatMap((response) => parse(response.data.contents).items);
         const newPosts = addPosts(watchedState.posts, posts);
         watchedState.posts.push(...newPosts);
         refresh(watchedState, refreshInterval);
@@ -35,7 +34,10 @@ const refresh = (watchedState, refreshInterval) => {
 
 export default () => {
   const initialState = {
-    form: 'ready',
+    formStatus: {
+      status: 'ready',
+      message: '',
+    },
     feeds: [],
     posts: [],
     modal: {},
@@ -71,33 +73,29 @@ export default () => {
     );
     domElements.form.self.addEventListener('submit', (e) => {
       e.preventDefault();
-      watchedState.form = 'rssLoading';
+      watchedState.formStatus = { status: 'loading', message: '' };
       const formData = new FormData(e.target);
       const url = formData.get('url').trim();
       validateUrl(url, watchedState)
         .then((validated) => getRss(validated.feed))
         .then((response) => {
-          if (isValidContent(response)) {
-            watchedState.form = 'rssSuccess';
-            const parsedFeed = parseFeed(response.data.contents, url);
-            const feedData = {
-              url,
-              title: parsedFeed.title,
-              description: parsedFeed.description,
-            };
-            const newPosts = addPosts(watchedState.posts, parsedFeed.items);
-            watchedState.posts.push(...newPosts);
-            watchedState.feeds.push(feedData);
-            return;
-          }
-          watchedState.form = 'rssInvalidContent';
+          const parsedFeed = parse(response.data.contents);
+          const feedData = {
+            url,
+            title: parsedFeed.title,
+            description: parsedFeed.description,
+          };
+          const newPosts = addPosts(watchedState.posts, parsedFeed.items);
+          watchedState.posts.push(...newPosts);
+          watchedState.feeds.push(feedData);
+          watchedState.formStatus = { status: 'success', message: 'rssSuccess' };
         })
         .catch((error) => {
           if (error.message === 'Network Error') {
-            watchedState.form = 'rssNetworkError';
+            watchedState.formStatus = { status: 'error', message: 'rssNetworkError' };
             return;
           }
-          watchedState.form = error.message;
+          watchedState.formStatus = { status: 'error', message: error.message };
         });
     });
     domElements.postsContainer.addEventListener('click', (e) => {
